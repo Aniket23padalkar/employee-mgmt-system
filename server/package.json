@@ -11,7 +11,7 @@
     "dev": "tsx watch src/server.ts",
     "test": "echo \"No tests yet\" && exit 0",
     "db:create": "psql -U postgres -c \"CREATE DATABASE employee_mgmt_system\"",
-    "db:schema": "psql -U postgres -d employee_mgmt_system -f .server/database/schema.sql"
+    "db:schema": "psql -U postgres -d employee_mgmt_system -f ./database/schema.sql"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
@@ -20,7 +20,8 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
-    "nodemon": "^3.1.14"
+    "nodemon": "^3.1.14",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.10",
