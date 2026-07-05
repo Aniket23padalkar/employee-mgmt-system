@@ -2,17 +2,21 @@ import pool from "../../db/db.js";
 import type {
   CreateUserParams,
   CreateUserResult,
+  GetUserFromDBParams,
   User,
 } from "../../types/auth.types.js";
 
-export const getUserFromDB = async (
-  email: string,
-): Promise<User | undefined> => {
+export const getUserFromDB = async ({
+  email,
+  user_id,
+}: GetUserFromDBParams): Promise<User | undefined> => {
   const query: string = `
         SELECT * FROM users WHERE email = $1
     `;
 
-  const result = await pool.query<User>(query, [email]);
+  const value = email ? email : user_id;
+
+  const result = await pool.query<User>(query, [value]);
 
   return result.rows[0];
 };

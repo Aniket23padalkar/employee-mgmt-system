@@ -27,7 +27,7 @@ export const registerUserService = async (
   const password = registerData.password;
   const role = registerData.role;
 
-  const user = await getUserFromDB(email);
+  const user = await getUserFromDB({ email: email });
 
   if (user) {
     throw new AppError("User already exists, Please register", 401);
@@ -54,7 +54,7 @@ export const loginUserService = async (
 ): Promise<LoginUserResponse> => {
   const { email, password } = body;
 
-  const user = await getUserFromDB(email);
+  const user = await getUserFromDB({ email: email });
 
   if (!user || user === undefined) {
     throw new AppError("Invalid email or password", 401);
@@ -90,4 +90,34 @@ export const loginUserService = async (
       department: user.department,
     },
   };
+};
+
+export const refreshTokenService = async (refreshToken: string) => {
+  if (!refreshToken) {
+    throw new AppError("Refresh token missing", 401);
+  }
+
+  let payload: { user_id: number };
+
+  try {
+    payload = jwt.verify(refreshToken, config.refresh_token_secret) as {
+      user_id: number;
+    };
+  } catch (err) {
+    throw new AppError("Invalid or expired refresh token", 401);
+  }
+
+  const user = await getUserFromDB({ user_id: payload.user_id });
+
+  if (!user || user === undefined) {
+    throw new AppError("User not found", 401);
+  }
+
+  const accessToken = generateToken({
+    user_id: user.user_id,
+    expiresIn: "15m",
+    secretToken: config.access_token_secret,
+  });
+
+  return { accessToken };
 };

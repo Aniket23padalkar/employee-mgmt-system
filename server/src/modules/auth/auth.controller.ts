@@ -1,6 +1,10 @@
-import type { CookieOptions, NextFunction, Request, Response } from "express";
+import type { CookieOptions, Request, Response } from "express";
 import type { LoginData, RegisterData } from "../../schemas/auth.schemas.js";
-import { loginUserService, registerUserService } from "./auth.service.js";
+import {
+  loginUserService,
+  refreshTokenService,
+  registerUserService,
+} from "./auth.service.js";
 import type { CreateUserResult, SafeUser } from "../../types/auth.types.js";
 import { config } from "../../db/env.js";
 
@@ -14,7 +18,6 @@ const cookieOptions: CookieOptions = {
 export const registerUser = async (
   req: Request<{}, {}, RegisterData>,
   res: Response<{ success: boolean; message: string; user: CreateUserResult }>,
-  next: NextFunction,
 ) => {
   const { confirm_password, ...registerData } = req.body;
 
@@ -35,7 +38,6 @@ export const loginUser = async (
     user: SafeUser;
     accessToken: string;
   }>,
-  next: NextFunction,
 ) => {
   const { accessToken, refreshToken, user } = await loginUserService(req.body);
 
@@ -45,6 +47,20 @@ export const loginUser = async (
     success: true,
     message: "User logged in successfully",
     user: user,
+    accessToken: accessToken,
+  });
+};
+
+export const refreshAccessToken = async (
+  req: Request,
+  res: Response<{ success: boolean; message: string; accessToken: string }>,
+) => {
+  const refreshToken = req.cookies.refreshToken;
+  const { accessToken } = await refreshTokenService(refreshToken);
+
+  return res.status(200).json({
+    success: true,
+    message: "Refreshed access token",
     accessToken: accessToken,
   });
 };

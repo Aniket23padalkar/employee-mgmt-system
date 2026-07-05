@@ -25,6 +25,11 @@ export interface SafeUser {
 
 export type CleanRegisterData = Omit<RegisterData, "confirm_password">;
 
+export interface GetUserFromDBParams {
+  email?: string;
+  user_id?: number;
+}
+
 export interface CreateUserParams {
   full_name: string;
   password: string;
