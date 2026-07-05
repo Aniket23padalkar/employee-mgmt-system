@@ -1,3 +1,4 @@
+import type { SignOptions } from "jsonwebtoken";
 import type { RegisterData } from "../schemas/auth.schemas.js";
 
 export interface User {
@@ -36,4 +37,16 @@ export interface CreateUserResult {
   full_name: string;
   email: string;
   role: "admin" | "employee";
+}
+
+export interface TokenParams {
+  user_id: number;
+  expiresIn?: SignOptions["expiresIn"];
+  secretToken: string;
+}
+
+export interface LoginUserResponse {
+  accessToken: string;
+  refreshToken: string;
+  user: SafeUser;
 }

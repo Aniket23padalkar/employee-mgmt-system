@@ -10,7 +10,9 @@ const requiredEnvVars = [
   "DB_PORT",
   "DB_HOST",
   "DB_PASSWORD",
-  "JWT_SECRET",
+  "ACCESS_TOKEN_SECRET",
+  "REFRESH_TOKEN_SECRET",
+  "ISSUER",
 ];
 
 requiredEnvVars.forEach((key) => {
@@ -27,5 +29,7 @@ export const config = {
   db_port: Number(process.env.DB_PORT),
   db_host: process.env.DB_HOST as string,
   db_password: process.env.DB_PASSWORD as string,
-  jwt_secret: process.env.JWT_SECRET as string,
+  access_token_secret: process.env.ACCESS_TOKEN_SECRET as string,
+  refresh_token_secret: process.env.REFRESH_TOKEN_SECRET as string,
+  issuer: process.env.ISSUER as string,
 };

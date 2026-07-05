@@ -1,4 +1,4 @@
-import z from "zod";
+import z, { email } from "zod";
 
 const passwordSchema = z
   .string()
@@ -23,3 +23,10 @@ export const registerSchema = z
   });
 
 export type RegisterData = z.infer<typeof registerSchema>;
+
+export const loginSchema = z.object({
+  email: z.email().toLowerCase().trim(),
+  password: passwordSchema,
+});
+
+export type LoginData = z.infer<typeof loginSchema>;
