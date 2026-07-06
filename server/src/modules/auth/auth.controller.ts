@@ -7,6 +7,7 @@ import {
 } from "./auth.service.js";
 import type { CreateUserResult, SafeUser } from "../../types/auth.types.js";
 import { config } from "../../db/env.js";
+import { AppError } from "../../utils/AppError.js";
 
 const cookieOptions: CookieOptions = {
   httpOnly: true,
@@ -62,5 +63,20 @@ export const refreshAccessToken = async (
     success: true,
     message: "Refreshed access token",
     accessToken: accessToken,
+  });
+};
+
+export const getUserProfile = (
+  req: Request,
+  res: Response<{ success: boolean; message: string; user: SafeUser }>,
+) => {
+  if (!req.user) {
+    throw new AppError("Unauthorized", 401);
+  }
+
+  return res.status(200).json({
+    success: true,
+    message: "Fetched user profile successfully",
+    user: req.user,
   });
 };
